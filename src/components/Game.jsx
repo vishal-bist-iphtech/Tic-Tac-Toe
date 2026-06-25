@@ -1,19 +1,12 @@
 import { useState } from "react";
-
 import Board from "./Board";
 
 const Game = () => {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
+  const [matchedSquare, setMatchedSquare] = useState(null);
   const xIsNext = currentMove % 2 === 0;
-
   const currentSquare = history[currentMove];
-
-  const handlePlay = (nxtSqr) => {
-    const nextHistory = [...history.splice(0, currentMove + 1), nxtSqr];
-    setHistory(nextHistory);
-    setCurrentMove(nextHistory.length - 1);
-  };
 
   // winner function
   const calculateWinner = (square) => {
@@ -32,31 +25,64 @@ const Game = () => {
       const [a, b, c] = lines[i];
 
       if (square[a] && square[a] === square[b] && square[a] === square[c]) {
-        return square[a];
+        return { winner: square[a], winningSquares: [a, b, c] };
       }
     }
 
-    return null;
+    return { winner: null, winningSquares: null };
   };
 
-  // status variable to show the status of the game
-  let status;
-  const winner = calculateWinner(currentSquare);
+  const handlePlay = (nxtSqr) => {
+    const nextHistory = [...history.slice(0, currentMove + 1), nxtSqr];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+    
+    // Check for winner after each move
+    const result = calculateWinner(nxtSqr);
+    if (result.winner) {
+      setMatchedSquare(result.winningSquares);
+    } else {
+      setMatchedSquare(null);
+    }
+  };
 
-  if (winner) status = "Winner: " + winner;
-  else status = "Next Player: " + (xIsNext ? "X" : "O");
+  // Check for draw
+  const isDraw = (square) => {
+    return square.every(cell => cell !== null);
+  };
+
+  // Calculate winner and draw status
+  const result = calculateWinner(currentSquare);
+  const winner = result.winner;
+  const winningSquares = result.winningSquares;
+
+  // Update matched squares when winner changes
+  if (winner && !matchedSquare) {
+    setMatchedSquare(winningSquares);
+  } else if (!winner && matchedSquare) {
+    setMatchedSquare(null);
+  }
+
+  // Status logic
+  let status;
+  if (winner) {
+    status = "Winner: " + winner;
+  } else if (isDraw(currentSquare)) {
+    status = "Game Draw!!";
+  } else {
+    status = "Next Player: " + (xIsNext ? "X" : "O");
+  }
 
   const JumpTo = (nextMove) => {
     setCurrentMove(nextMove);
+    // Reset matched squares when jumping
+    setMatchedSquare(null);
   };
 
   const moves = history.map((square, move) => {
     let description;
     if (move > 0) description = "Go to move #" + move;
     else description = "Restart the game";
-
-    
-    if (move >= 9 && !winner) status = "Game Draw!!";
 
     return (
       <li key={move}>
@@ -73,6 +99,7 @@ const Game = () => {
         onPlay={handlePlay}
         status={status}
         calculateWinner={calculateWinner}
+        matchedSquare={matchedSquare}
       />
       <div className="history">
         <ol>{moves}</ol>

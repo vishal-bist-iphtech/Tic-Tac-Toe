@@ -1,4 +1,4 @@
-const Board = ({ xIsNext, square, onPlay, status, calculateWinner}) => {
+const Board = ({ xIsNext, square, onPlay, status, calculateWinner, matchedSquare}) => {
   // helper function to slice rows from the square array
   const createBoardRows = () => {
     const rows = [];
@@ -13,13 +13,13 @@ const Board = ({ xIsNext, square, onPlay, status, calculateWinner}) => {
     return (
       <>
         {createBoardRows().map((row, rowIndex) => (
-          <div key={rowIndex} className="board-row">
+          <div key={rowIndex} className= "board-row">
             {row.map((value, colIndex) => {
               const index = rowIndex * 3 + colIndex;
               return (
                 <button
                   key={index}
-                  className="square"
+                  className={` square ${matchedSquare && matchedSquare.includes(index) ? "square-matched" : ""}`}
                   onClick={() => handleClick(index)}
                 >
                   {value}
@@ -33,7 +33,8 @@ const Board = ({ xIsNext, square, onPlay, status, calculateWinner}) => {
   };
 
   const handleClick = (i) => {
-    if (square[i] || calculateWinner(square)) return;
+    let result = calculateWinner(square)
+    if (square[i] || result.winner) return;
 
     const nxtSqr = square.slice();
 
