@@ -1,4 +1,4 @@
-const Board = ({ xIsNext, square, onPlay }) => {
+const Board = ({ xIsNext, square, onPlay, status, calculateWinner}) => {
   // helper function to slice rows from the square array
   const createBoardRows = () => {
     const rows = [];
@@ -44,42 +44,7 @@ const Board = ({ xIsNext, square, onPlay }) => {
     }
 
     onPlay(nxtSqr);
-
-    console.log("history",history);
-    console.log("square",square);
   };
-
-  // winner function
-  const calculateWinner = (square) => {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-
-    for (let i = 0; i < lines.length; ++i) {
-      const [a, b, c] = lines[i];
-
-      if (square[a] && square[a] === square[b] && square[a] === square[c]) {
-        return square[a];
-      }
-    }
-
-    return null;
-  };
-
-  const winner = calculateWinner(square);
-  let status;
-
-  if (winner) status = "Winner: " + winner;
-  // else if(square.length >=9)
-  //     status = 'Game Draw!!';
-  else status = "Next Player: " + (xIsNext ? "X" : "O");
 
   return (
     <div className="board">
