@@ -3,7 +3,6 @@ import { useState } from "react";
 import Board from "./Board";
 
 const Game = () => {
-  const [square, setSquare] = useState([Array(9).fill(null)]);
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
@@ -39,7 +38,6 @@ const Game = () => {
         <Board
           xIsNext={xIsNext}
           square={currentSquare}
-          setSquare={setSquare}
           onPlay={handlePlay}
         />
       <div className="history">
