@@ -1,5 +1,3 @@
-
-
 body {
   box-sizing: border-box;
   margin: 0;
@@ -15,6 +13,12 @@ h1{
     font-size: 36px;
     margin: 20px 0;
   }
+}
+
+.status {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .square {
