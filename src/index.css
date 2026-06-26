@@ -1,5 +1,3 @@
-
-
 body {
   box-sizing: border-box;
   margin: 0;
@@ -17,13 +15,46 @@ h1{
   }
 }
 
+.status {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .square {
   width: 80px;
   height: 80px;
   margin: 1px;
   font-size: 2rem;
   font-weight: bold;
+  border-radius: 6px;
   transition: none;
+}
+.square-matched {
+  border-color: rgba(1, 75, 247, 0.3) !important;
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(1, 75, 247, 0.3);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.square:not(.square-matched):hover {
+  background-color: #f0f0f0;
+  transform: scale(1.02);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(37, 88, 207, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(22, 84, 229, 0.3);
+  }
+  100% {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(37, 97, 239, 0.3);
+  }
 }
 
 .app {
